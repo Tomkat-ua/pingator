@@ -1,14 +1,14 @@
 #### Pingator
-ver = "v.3.6"
+ver = "v.3.6.1"
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 from datetime import datetime
 import ping3
 import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
 
 print("Version "+ver)
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 tab='  |'
 get_delay=10
 ping3.EXCEPTIONS = True

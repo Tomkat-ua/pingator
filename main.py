@@ -1,4 +1,4 @@
-#### Pingator v.2
+#### Pingator v.2.2
 from prometheus_client import start_http_server, Gauge
 import time
 import ping3
@@ -45,10 +45,8 @@ def get_host_responce():
         try:
             responce = requests.get(url)
             responce.raise_for_status()
-            # GET_RESPONCE.labels(url).set(responce.status_code)
             print(tab + url + ' :' + str(responce.status_code))
         except requests.exceptions.HTTPError as errh:
-            # responce.status_code=503
             print(tab +url+" :Http Error:", errh)
         except requests.exceptions.ConnectionError as errc:
             print(tab +url+" :Error Connecting:", errc)
@@ -58,7 +56,6 @@ def get_host_responce():
             print(tab +url+" :OOps: Something Else", err)
 
         GET_RESPONCE.labels(url).set(responce.status_code)
-        # print(tab+url +' :'+str(responce.status_code))
 
 if __name__ == '__main__':
     start_http_server(8000)

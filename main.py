@@ -1,4 +1,4 @@
-#### Pingator v.3.1
+#### Pingator v.3.2
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 import ping3
@@ -12,15 +12,7 @@ server_port = 8000
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
 GET_RESPONCE = Gauge('responce_from_url', 'Responce from url',['url'])
 
-hostlist='hostlist.txt'
-with open(hostlist, 'r') as text:
-    hosts = text.readlines()
-hosts = [line.rstrip() for line in hosts]
 
-urllist='urllist.txt'
-with open(urllist, 'r') as text:
-    urls = text.readlines()
-urls = [line.rstrip() for line in urls]
 #header ={'User-Agent': 'Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0 '}
 
 def ping_gauge(h):
@@ -34,12 +26,17 @@ def ping_gauge(h):
         x = 9999
     return(x)
 
-def get_ping_time(list):
-    print('Get ping time from '+hostlist+' ......')
-    for host in list:
-        ptime = ping_gauge(host)
-        print(tab+host +':'+str(ptime))
-        PING_TIME.labels(host).set(ptime)
+def get_ping_time():
+    hostlistfile = 'hostlist.txt'
+    with open(hostlistfile, 'r') as text:
+        hosts = text.readlines()
+    hosts = [line.rstrip() for line in hosts]
+    print('Get ping time from '+hostlistfile+' ......')
+
+    for host in hosts:
+        result = ping_gauge(host)
+        print(tab+host +':'+str(result))
+        PING_TIME.labels(host).set(result)
 
 def get_url_responce(url):
     try:
@@ -57,9 +54,14 @@ def get_url_responce(url):
 
     return(responce_code)
 
-def get_urls_responces(list):
-    print('Get responce from ' + urllist + ' ......')
-    for url in list:
+def get_urls_responces():
+    urllistfile = 'urllist.txt'
+    with open(urllistfile, 'r') as text:
+        urls = text.readlines()
+    urls = [line.rstrip() for line in urls]
+    print('Get responce from ' + urllistfile + ' ......')
+
+    for url in urls:
         result = get_url_responce(url)
         print(tab +url +' :' +str(result))
         GET_RESPONCE.labels(url).set(result)
@@ -67,7 +69,7 @@ def get_urls_responces(list):
 if __name__ == '__main__':
     start_http_server(server_port)
     while True:
-      get_ping_time(hosts)
-      get_urls_responces(urls)
+      get_ping_time()
+      get_urls_responces()
       print('----------------------------')
       sleep(get_delay)

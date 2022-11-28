@@ -1,5 +1,5 @@
 #### Pingator
-ver = "v.3.6.1"
+ver = "3.7"
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 from datetime import datetime
@@ -14,10 +14,11 @@ get_delay=10
 ping3.EXCEPTIONS = True
 server_port = 8000
 
-APP_VERSION = Gauge('app_version', 'Return app version',['ver'])
+APP_INFO = Gauge('app_info', 'Return app version',['version'])
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
 GET_RESPONCE = Gauge('responce_from_url', 'Responce from url',['url'])
-APP_VERSION.labels(ver).set(1)
+
+APP_INFO.labels(ver).set(1)
 def get_date_time():
     now = datetime.now()  # current date and time
     date_time = now.strftime("%d.%m.%Y %H:%M:%S")
@@ -53,6 +54,7 @@ def get_url_responce(url):
     except requests.exceptions.HTTPError as errh:
         print(tab +get_date_time()+' '+url + ' '  +" :Http Error:", errh)
     except requests.exceptions.ConnectionError as errc:
+        responce_code=500
         print(tab +get_date_time()+' '+url + ' '  + " :Error Connecting:", errc)
     except requests.exceptions.Timeout as errt:
         print(tab +get_date_time()+' '+url + ' '  + " :Timeout Error:", errt)

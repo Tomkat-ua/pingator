@@ -1,12 +1,13 @@
-#### Pingator v.3
+#### Pingator v.3.1
 from prometheus_client import start_http_server, Gauge
-import time
+from time import sleep as sleep
 import ping3
 import requests
 
 tab='  |'
 get_delay=10
 ping3.EXCEPTIONS = True
+server_port = 8000
 
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
 GET_RESPONCE = Gauge('responce_from_url', 'Responce from url',['url'])
@@ -64,10 +65,9 @@ def get_urls_responces(list):
         GET_RESPONCE.labels(url).set(result)
 
 if __name__ == '__main__':
-    start_http_server(8000)
+    start_http_server(server_port)
     while True:
       get_ping_time(hosts)
       get_urls_responces(urls)
       print('----------------------------')
-      time.sleep(get_delay)
-
+      sleep(get_delay)

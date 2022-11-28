@@ -1,4 +1,4 @@
-#### Pingator v.3.2
+#### Pingator v.3.3
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 import ping3
@@ -12,19 +12,16 @@ server_port = 8000
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
 GET_RESPONCE = Gauge('responce_from_url', 'Responce from url',['url'])
 
-
-#header ={'User-Agent': 'Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0 '}
-
 def ping_gauge(h):
     try:
-      x = ping3.ping(h, unit='ms')
+      result = ping3.ping(h, unit='ms')
     except ping3.errors.HostUnknown:  # Specific error is catched.
         print(tab+h+':'+"Host unknown error raised.")
-        x = 9999
+        result = 9999
     except ping3.errors.PingError:  # All ping3 errors are subclasses of `PingError`.
         print(tab+h+':'+"A ping error raised.")
-        x = 9999
-    return(x)
+        result = 9999
+    return(result)
 
 def get_ping_time():
     hostlistfile = 'hostlist.txt'

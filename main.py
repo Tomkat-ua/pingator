@@ -1,10 +1,11 @@
-#### Pingator v.2.2
+#### Pingator v.3
 from prometheus_client import start_http_server, Gauge
 import time
 import ping3
 import requests
 
 tab='  |'
+get_delay=10
 ping3.EXCEPTIONS = True
 
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
@@ -32,36 +33,41 @@ def ping_gauge(h):
         x = 9999
     return(x)
 
-def get_ping_time():
+def get_ping_time(list):
     print('Get ping time from '+hostlist+' ......')
-    for host in hosts:
+    for host in list:
         ptime = ping_gauge(host)
         print(tab+host +':'+str(ptime))
         PING_TIME.labels(host).set(ptime)
 
-def get_host_responce():
-    print('Get responce from '+urllist+' ......')
-    for url in urls:
-        try:
-            responce = requests.get(url)
-            responce.raise_for_status()
-            print(tab + url + ' :' + str(responce.status_code))
-        except requests.exceptions.HTTPError as errh:
-            print(tab +url+" :Http Error:", errh)
-        except requests.exceptions.ConnectionError as errc:
-            print(tab +url+" :Error Connecting:", errc)
-        except requests.exceptions.Timeout as errt:
-            print(tab +url+" :Timeout Error:", errt)
-        except requests.exceptions.RequestException as err:
-            print(tab +url+" :OOps: Something Else", err)
+def get_url_responce(url):
+    try:
+        responce = requests.get(url)
+        responce_code = responce.status_code
+        responce.raise_for_status()
+    except requests.exceptions.HTTPError as errh:
+        print(tab + url + ' '  +":Http Error:", errh)
+    except requests.exceptions.ConnectionError as errc:
+        print(tab + url + ' '  + " :Error Connecting:", errc)
+    except requests.exceptions.Timeout as errt:
+        print(tab + url + ' '  + " :Timeout Error:", errt)
+    except requests.exceptions.RequestException as err:
+        print(tab + url + ' '  + " :OOps: Something Else", err)
 
-        GET_RESPONCE.labels(url).set(responce.status_code)
+    return(responce_code)
+
+def get_urls_responces(list):
+    print('Get responce from ' + urllist + ' ......')
+    for url in list:
+        result = get_url_responce(url)
+        print(tab +url +' :' +str(result))
+        GET_RESPONCE.labels(url).set(result)
 
 if __name__ == '__main__':
     start_http_server(8000)
     while True:
-      get_ping_time()
-      get_host_responce()
+      get_ping_time(hosts)
+      get_urls_responces(urls)
       print('----------------------------')
-      time.sleep(10)
+      time.sleep(get_delay)
 

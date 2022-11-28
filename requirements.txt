@@ -1,0 +1,5 @@
+###### Requirements without Version Specifiers ######
+ping3
+prometheus-client
+requests
+

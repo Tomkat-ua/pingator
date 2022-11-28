@@ -1,5 +1,5 @@
 #### Pingator
-ver = "3.7"
+ver = "3.7.1"
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 from datetime import datetime
@@ -57,8 +57,10 @@ def get_url_responce(url):
         responce_code=500
         print(tab +get_date_time()+' '+url + ' '  + " :Error Connecting:", errc)
     except requests.exceptions.Timeout as errt:
+        responce_code = 500
         print(tab +get_date_time()+' '+url + ' '  + " :Timeout Error:", errt)
     except requests.exceptions.RequestException as err:
+        responce_code = 500
         print(tab +get_date_time()+' '+url + ' '  + " :OOps: Something Else", err)
 
     return(responce_code)

@@ -1,4 +1,5 @@
-#### Pingator v.3.5
+#### Pingator
+ver = "v.3.6"
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 from datetime import datetime
@@ -6,15 +7,17 @@ import ping3
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+print("Version "+ver)
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 tab='  |'
 get_delay=10
 ping3.EXCEPTIONS = True
 server_port = 8000
 
+APP_VERSION = Gauge('app_version', 'Return app version',['ver'])
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
 GET_RESPONCE = Gauge('responce_from_url', 'Responce from url',['url'])
-
+APP_VERSION.labels(ver).set(1)
 def get_date_time():
     now = datetime.now()  # current date and time
     date_time = now.strftime("%d.%m.%Y %H:%M:%S")

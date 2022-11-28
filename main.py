@@ -1,9 +1,11 @@
-#### Pingator v.3.3
+#### Pingator v.3.4
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 import ping3
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 tab='  |'
 get_delay=10
 ping3.EXCEPTIONS = True
@@ -37,7 +39,7 @@ def get_ping_time():
 
 def get_url_responce(url):
     try:
-        responce = requests.get(url)
+        responce = requests.get(url,verify=False)
         responce_code = responce.status_code
         responce.raise_for_status()
     except requests.exceptions.HTTPError as errh:

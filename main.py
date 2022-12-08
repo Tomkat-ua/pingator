@@ -1,5 +1,7 @@
 #### Pingator
-ver = "3.7.1"
+appver = "3.7.2"
+appname = "Pingator microservice"
+appshortname = "Pingator"
 from prometheus_client import start_http_server, Gauge
 from time import sleep as sleep
 from datetime import datetime
@@ -7,18 +9,19 @@ import ping3
 import requests
 
 
-print("Version "+ver)
+print("Version "+appver)
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 tab='  |'
 get_delay=10
 ping3.EXCEPTIONS = True
-server_port = 8000
+server_port = 80
 
-APP_INFO = Gauge('app_info', 'Return app version',['version'])
+APP_INFO = Gauge('app_info', 'Return app info',['appname','appshortname','version'])
 PING_TIME = Gauge('ping_time_host', 'Return time ping to host',['ping_host'])
 GET_RESPONCE = Gauge('responce_from_url', 'Responce from url',['url'])
 
-APP_INFO.labels(ver).set(1)
+APP_INFO.labels(appname,appshortname,appver).set(1)
+
 def get_date_time():
     now = datetime.now()  # current date and time
     date_time = now.strftime("%d.%m.%Y %H:%M:%S")

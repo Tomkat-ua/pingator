@@ -9,7 +9,7 @@ import ping3
 import requests
 
 
-print("Version "+appver)
+print(appname + " ver. "+appver)
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 tab='  |'
 get_delay=10

@@ -1,5 +1,5 @@
 #### Pingator
-appver = "3.7.2"
+appver = "3.7.3"
 appname = "Pingator microservice"
 appshortname = "Pingator"
 from prometheus_client import start_http_server, Gauge
@@ -38,7 +38,7 @@ def ping_gauge(host):
     return(result)
 
 def get_ping_time():
-    hostlistfile = 'hostlist.txt'
+    hostlistfile = '/mnt/config/hostlist.cfg'
     with open(hostlistfile, 'r') as text:
         hosts = text.readlines()
     hosts = [line.rstrip() for line in hosts]
@@ -69,7 +69,7 @@ def get_url_responce(url):
     return(responce_code)
 
 def get_urls_responces():
-    urllistfile = 'urllist.txt'
+    urllistfile = '/mnt/config/urllist.cfg'
     with open(urllistfile, 'r') as text:
         urls = text.readlines()
     urls = [line.rstrip() for line in urls]
